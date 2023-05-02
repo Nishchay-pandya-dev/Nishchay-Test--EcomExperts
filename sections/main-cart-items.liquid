@@ -216,7 +216,7 @@
                       {%- endif -%}
                     </div>
                   </td>
-
+                  {% unless item.product.tags contains 'hide_product' %}
                   <td class="cart-item__quantity">
                     <div class="cart-item__quantity-wrapper">
                       <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
@@ -284,7 +284,7 @@
                       </svg>
                     </div>
                   </td>
-
+                        {% endunless %}
                   <td class="cart-item__totals right small-hide">
                     <div class="loading-overlay hidden">
                       <div class="loading-overlay__spinner">
