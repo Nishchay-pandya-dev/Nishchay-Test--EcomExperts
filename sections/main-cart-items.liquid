@@ -261,8 +261,9 @@
                       >
                         <a
                           href="{{ item.url_to_remove }}"
-                          class="button button--tertiary"
+                          class="button button--tertiary custom-delete-change"
                           aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                          info="{{ item.id }}"
                         >
                           {% render 'icon-remove' %}
                         </a>
@@ -352,7 +353,7 @@
       {{ 'accessibility.loading' | t }}
     </p>
   </form>
-</cart-items>
+</cart-items>                       
 
 {% schema %}
 {

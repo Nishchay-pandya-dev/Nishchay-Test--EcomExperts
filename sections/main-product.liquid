@@ -23,6 +23,20 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
+
+    /* add extra csss for color swatches */
+    .product-form__input input[type=radio]+label.label-color{
+      width: 60px;
+      height: 60px;
+      border-radius: 0;
+      padding: 0;
+      font-size: 0px;
+      border: 2px solid black;
+    }
+    .product-form__input input[type=radio].active+label.label-color{
+      border:2px solid #46ff00;
+      box-shadow: 0 0 0 2px #ffffff inset;
+    }
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
@@ -569,6 +583,67 @@
   </script>
 </section>
 
+<script>
+   // on color swatches click change slider thumbnail image and hide other images.
+    if (document.querySelector('select[name="options[Color]"]').length > 0) {
+        var currentVariant = '{{ product.selected_or_first_available_variant.title }}';
+        currentVariant = currentVariant.split('/')[0];
+        currentVariant = currentVariant.replace(' ', '');
+        var allThumbnail = document.querySelectorAll('li.thumbnail-list__item.slider__slide');
+        for (var i = 0; i < allThumbnail.length; i++) {
+            allThumbnail[i].style.display = 'none';
+        }
+        var thumbnailParent = document.querySelectorAll('li.thumbnail-list__item.slider__slide  img[alt="' + currentVariant + '"]');
+        for (var i = 0; i < thumbnailParent.length; i++) {
+            thumbnailParent[i].parentElement.parentElement.style.display = 'block';
+        }
+    
+        var getColorLabel = document.querySelectorAll('.label-color');
+        for (var i = 0; i < getColorLabel.length; i++) {
+    
+    
+            getColorLabel[i].addEventListener('click', function(event) {
+                var allThumbnail = document.querySelectorAll('li.thumbnail-list__item.slider__slide');
+                for (var i = 0; i < allThumbnail.length; i++) {
+                    allThumbnail[i].style.display = 'none';
+                }
+                const test = event.target.getAttribute('info');
+                var colorVal = event.target.getAttribute('info');
+                var thumbnailParent = document.querySelectorAll('li.thumbnail-list__item.slider__slide  img[alt="' + colorVal + '"]');
+                for (var i = 0; i < thumbnailParent.length; i++) {
+                    thumbnailParent[i].parentElement.parentElement.style.display = 'block';
+                }
+            })
+        }
+    }
+
+   // by Default select size to Unselected also on refresh page it automatically select Unselected option
+        var x = document.querySelector('select[name="options[Size]"]');
+        for (var i = 0; i < x.length; i++) {
+            if (x.options[i].value == 'Unselected') {
+                if (document.querySelector('select[name="options[Size]"]').value != 'Unselected') {
+                    document.querySelector('select[name="options[Size]"]').value = 'Unselected';
+                    setTimeout(() =>{
+                      var evt = document.createEvent("HTMLEvents");
+                      evt.initEvent("change", false, true);
+                      document.querySelector('variant-selects').dispatchEvent(evt);
+                    }, 800)
+                }
+            }
+        }
+
+  // add active class on selected color swatches  
+    var customColorOption = document.querySelectorAll('[name="custom-color-option"]');
+    for (var i = 0; i < customColorOption.length; i++) {
+        customColorOption[i].addEventListener('change', function(e) {
+            const val = e.target.value;
+            document.querySelector('select[name="options[Color]"]').value = val;
+            document.querySelectorAll('[name="custom-color-option"]').forEach(el => el.classList.remove('active'))
+            this.classList.add('active')
+        });
+    }
+</script>
+                          
 {% schema %}
 {
   "name": "t:sections.main-product.name",

@@ -213,7 +213,7 @@
                   {%- if forloop.index > 2 -%}
                     {%- assign lazy_load = true -%}
                   {%- endif -%}
-
+               {% unless item.tags contains 'hide_product' %}
                   <li class="grid__item">
                     {%- case item.object_type -%}
                       {%- when 'product' -%}
@@ -255,6 +255,7 @@
                         </div>
                     {%- endcase -%}
                   </li>
+                  {% endunless %}   
                 {%- endfor -%}
               </ul>
               {%- if paginate.pages > 1 -%}
