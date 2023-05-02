@@ -83,7 +83,35 @@ class CartItems extends HTMLElement {
     ];
   }
 
-  updateQuantity(line, quantity, name) {
+  async updateQuantity(line, quantity, name) {
+    async function getCart() {
+      const result = await fetch("/cart.json");
+
+      if (result.status === 200) {
+        return result.json();
+      }
+
+      throw new Error(`Failed to get request, Shopify returned ${result.status} ${result.statusText}`);
+    }
+    async function removeItem() {
+      const result = await fetch(`${routes.cart_change_url}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          id: "45138351128875",
+          quantity: 0
+        })
+      });
+      location.reload();
+      return result.json();
+    }
+
+
+
+
     this.enableLoading(line);
 
     const body = JSON.stringify({
@@ -94,11 +122,17 @@ class CartItems extends HTMLElement {
     });
 
     fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
-      .then((response) => {
+      .then(async (response) => {
         return response.text();
       })
-      .then((state) => {
+      .then(async (state) => {
+
         const parsedState = JSON.parse(state);
+
+        // delete extra product 'Soft Winter Jacket'
+        const checkForRemove = parsedState.items.filter(item => item.id == 45151685640491).length > 0;
+        !checkForRemove && await removeItem();
+
         const quantityElement = document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
         const items = document.querySelectorAll('.cart-item');
 
@@ -140,7 +174,7 @@ class CartItems extends HTMLElement {
         } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
           trapFocus(cartDrawerWrapper, document.querySelector('.cart-item__name'))
         }
-        publish(PUB_SUB_EVENTS.cartUpdate, {source: 'cart-items'});
+        publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items' });
       }).catch(() => {
         this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
         const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
@@ -200,13 +234,13 @@ customElements.define('cart-items', CartItems);
 
 if (!customElements.get('cart-note')) {
   customElements.define('cart-note', class CartNote extends HTMLElement {
-      constructor() {
-        super();
+    constructor() {
+      super();
 
       this.addEventListener('change', debounce((event) => {
-            const body = JSON.stringify({ note: event.target.value });
-            fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } });
+        const body = JSON.stringify({ note: event.target.value });
+        fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } });
       }, ON_CHANGE_DEBOUNCE_TIMER))
-      }
+    }
   });
 };

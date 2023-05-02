@@ -19,6 +19,7 @@
           </h2>
           <ul id="predictive-search-results-queries-list" class="predictive-search__results-list list-unstyled" role="group" aria-labelledby="predictive-search-queries">
             {%- for query in predictive_search.resources.queries -%}
+             {% unless query.tags contains 'hide_product' %}
               <li id="predictive-search-option-query-{{ forloop.index }}" class="predictive-search__list-item" role="option" aria-selected="false">
                 <a href="{{ query.url }}" class="predictive-search__item link link--text" tabindex="-1">
                   <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -26,8 +27,10 @@
                   </div>
                 </a>
               </li>
+              {% endunless %}
             {%- endfor -%}
             {%- for collection in predictive_search.resources.collections -%}
+             {% unless collection.tags contains 'hide_product' %}
               <li id="predictive-search-option-collection-{{ forloop.index }}" class="predictive-search__list-item" role="option" aria-selected="false">
                 <a href="{{ collection.url }}" class="predictive-search__item link link--text" tabindex="-1">
                   <div class="predictive-search__item-content predictive-search__item-content--centered">
@@ -35,6 +38,7 @@
                   </div>
                 </a>
               </li>
+              {% endunless %}
             {%- endfor -%}
           </ul>
         </div>
@@ -78,7 +82,8 @@
               </h2>
               <ul id="predictive-search-results-products-list" class="predictive-search__results-list list-unstyled" role="group" aria-labelledby="predictive-search-products">
                 {%- for product in predictive_search.resources.products -%}
-                  <li id="predictive-search-option-product-{{ forloop.index }}" class="predictive-search__list-item" role="option" aria-selected="false">
+                  {% unless product.tags contains 'hide_product' %}
+                   <li id="predictive-search-option-product-{{ forloop.index }}" class="predictive-search__list-item" role="option" aria-selected="false">
                     <a href="{{ product.url }}" class="predictive-search__item predictive-search__item--link-with-thumbnail link link--text" tabindex="-1">
                       {%- if product.featured_media != blank -%}
                         <img class="predictive-search__image" src="{{ product.featured_media | image_url: width: 150 }}" alt="{{ product.featured_media.alt }}" width="50" height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}">
@@ -96,6 +101,7 @@
                       </div>
                     </a>
                   </li>
+                  {% endunless %}
                 {%- endfor -%}
               </ul>
             </div>

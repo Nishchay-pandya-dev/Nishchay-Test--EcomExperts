@@ -216,7 +216,7 @@
                       {%- endif -%}
                     </div>
                   </td>
-
+                  {% unless item.product.tags contains 'hide_product' %}
                   <td class="cart-item__quantity">
                     <div class="cart-item__quantity-wrapper">
                       <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
@@ -261,8 +261,9 @@
                       >
                         <a
                           href="{{ item.url_to_remove }}"
-                          class="button button--tertiary"
+                          class="button button--tertiary custom-delete-change"
                           aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+                          info="{{ item.id }}"
                         >
                           {% render 'icon-remove' %}
                         </a>
@@ -283,7 +284,7 @@
                       </svg>
                     </div>
                   </td>
-
+                        {% endunless %}
                   <td class="cart-item__totals right small-hide">
                     <div class="loading-overlay hidden">
                       <div class="loading-overlay__spinner">
@@ -352,7 +353,7 @@
       {{ 'accessibility.loading' | t }}
     </p>
   </form>
-</cart-items>
+</cart-items>                       
 
 {% schema %}
 {
