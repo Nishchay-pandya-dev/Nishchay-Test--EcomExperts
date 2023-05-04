@@ -623,12 +623,12 @@
             if (x.options[i].value == 'Unselected') {
                 if (document.querySelector('select[name="options[Size]"]').value != 'Unselected') {
                     document.querySelector('select[name="options[Size]"]').value = 'Unselected';
-                    setTimeout(() =>{
-                      var evt = document.createEvent("HTMLEvents");
-                      evt.initEvent("change", false, true);
-                      document.querySelector('variant-selects').dispatchEvent(evt);
-                    }, 800)
                 }
+                setTimeout(() =>{
+                  var evt = document.createEvent("HTMLEvents");
+                  evt.initEvent("change", false, true);
+                  document.querySelector('variant-selects').dispatchEvent(evt);
+                }, 800)
             }
         }
 
