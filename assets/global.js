@@ -817,7 +817,7 @@ class VariantSelects extends HTMLElement {
     this.removeErrorMessage();
     this.updateVariantStatuses();
 
-    if (!this.currentVariant) {
+    if (!this.currentVariant || this.currentVariant?.title.includes('Unselected')) {
       this.toggleAddButton(true, '', true);
       this.setUnavailable();
     } else {
